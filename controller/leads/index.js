@@ -54,7 +54,7 @@ const handleUpdateLeadStatus = async (req, res) => {
 
     const updatedLead = await prisma.lead_Data.update({
       where: { lead_number: lead_number },
-      data: { status: "acknowledge" }, // Change status to a valid one if needed
+      data: { status: "acknowledged" }, // Change status to a valid one if needed
     });
 
     return res.json(updatedLead);
