@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Define the User model
+model User {
+  user_id        Int       @id @default(autoincrement())
+  username       String    @unique
+  password       String
+  name           String?
+  contact_number String?
+  user_role      String?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+  deleted_at     DateTime?
+
+  // Define a relation to Lead_Data model
+  leads Lead_Data[]
+}
+
+// Define the Lead_Data model
+model Lead_Data {
+  lead_id             Int       @id @default(autoincrement())
+  lead_number         String    @unique
+  applicant_firstname String?
+  applicant_lastname  String?
+  applicant_number    String?
+  applicant_number2   String?
+  applicant_address1  String?
+  applicant_address2  String?
+  district            String?
+  state               String? 
+  pincode             String? 
+  status              String?   @default("generated")
+  generated_by        User      @relation(fields: [generated_by_id], references: [user_id])
+  generated_by_id     Int
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+  deleted_at          DateTime?
+
+  // Define a relation to Document_Data model
+  documents Document_Data[]
+}
+
+// Define the Document_Data model
+model Document_Data {
+  document_id   Int       @id @default(autoincrement())
+  document_type String
+  document_name String
+  document_path String
+  lead          Lead_Data @relation(fields: [lead_id], references: [lead_id])
+  lead_id       Int
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  deleted_at    DateTime?
+}
